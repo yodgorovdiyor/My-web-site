@@ -41,14 +41,53 @@
             filter: blur(80px); /* Gradient chiziqlarini yumshatish */
         }
 
+        /* Page transition animations */
         .page-section {
-            display: none;
-            background-color: #ffffff; /* Yorug' kartochka foni */
-            transition: background-color 0.3s ease, color 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            display: none; /* Odatiy bo'yicha yashirilgan */
         }
-        .active-page {
-            display: block;
+
+        .page-section.active-page {
+            opacity: 1;
+            transform: translateY(0);
+            display: block; /* Faol sahifa ko'rinadi */
         }
+
+        /* Content fade-in animation for elements inside active pages */
+        .content-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .content-fade-in.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Typing text specific styles to prevent layout shift */
+        /* #typing-text elementini o'rovchi divga qattiq balandlik berildi */
+        .typing-text-container {
+            height: 4rem; /* Eng katta matn (5xl) uchun yetarli balandlik */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem; /* Pastdagi paragrafdan ajratish uchun */
+        }
+        /* Asl #typing-text elementidan min-height va margin-bottom olib tashlandi */
+        #typing-text {
+            display: inline-block; /* Matnning o'zini to'g'ri ko'rsatish uchun */
+        }
+        /* Media query faqat font o'lchamini o'zgartiradi, balandlikni emas */
+        @media (min-width: 768px) { /* md breakpoint */
+            .typing-text-container {
+                height: 4rem; /* Katta ekranlar uchun ham bir xil balandlik */
+            }
+        }
+
+
         .carousel-container {
             overflow: hidden;
             position: relative;
@@ -363,12 +402,10 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Orqa fon musiqasi -->
+    <!-- Background music -->
     <audio id="background-music" loop autoplay>
-        <!-- Musiqa faylingizni bu yerga joylashtiring. Misol: src="music/your-song.mp3" -->
-        <!-- Hozircha joylashtiruvchi audio fayl ishlatiladi. Haqiqiy fayl bilan almashtiring. -->
-        <source src="music.m4a" type="audio/mpeg">
-        Brauzeringiz audio elementini qo'llab-quvvatlamaydi.
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
     </audio>
 
     <!-- Navbar -->
@@ -378,9 +415,9 @@
 
             <!-- Desktop Navigation -->
             <ul class="hidden md:flex items-center space-x-6">
-                <li class="navbar-link-item"><a href="#" onclick="showPage('home')" class="text-gray-600 font-medium transition duration-300">Bosh Sahifa</a></li>
+                <li class="navbar-link-item"><a href="#" onclick="showPage('home')" class="text-gray-600 font-medium transition duration-300">Home</a></li>
                 <li class="navbar-link-item"><a href="#" onclick="showPage('portfolio')" class="text-gray-600 font-medium transition duration-300">Portfolio</a></li>
-                <li class="navbar-link-item"><a href="#" onclick="showPage('contact')" class="text-gray-600 font-medium transition duration-300">Bog'lanish</a></li>
+                <li class="navbar-link-item"><a href="#" onclick="showPage('contact')" class="text-gray-600 font-medium transition duration-300">Contact</a></li>
                 <li class="flex items-center space-x-4">
                     <!-- Music Toggle Button (Desktop) -->
                     <button id="music-toggle-desktop" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -414,9 +451,9 @@
             &times;
         </button>
         <ul class="flex flex-col space-y-4 text-center">
-            <li class="py-2 border-b border-gray-200 dark:border-gray-700"><a href="#" onclick="showPage('home'); closeMobileMenu();" class="block font-medium text-lg transition duration-300 hover:text-blue-600 dark:hover:text-blue-400">Bosh Sahifa</a></li>
+            <li class="py-2 border-b border-gray-200 dark:border-gray-700"><a href="#" onclick="showPage('home'); closeMobileMenu();" class="block font-medium text-lg transition duration-300 hover:text-blue-600 dark:hover:text-blue-400">Home</a></li>
             <li class="py-2 border-b border-gray-200 dark:border-gray-700"><a href="#" onclick="showPage('portfolio'); closeMobileMenu();" class="block font-medium text-lg transition duration-300 hover:text-blue-600 dark:hover:text-blue-400">Portfolio</a></li>
-            <li class="py-2"><a href="#" onclick="showPage('contact'); closeMobileMenu();" class="block font-medium text-lg transition duration-300 hover:text-blue-600 dark:hover:text-blue-400">Bog'lanish</a></li>
+            <li class="py-2"><a href="#" onclick="showPage('contact'); closeMobileMenu();" class="block font-medium text-lg transition duration-300 hover:text-blue-600 dark:hover:text-blue-400">Contact</a></li>
             <li class="pt-4 flex justify-center items-center space-x-4">
                 <!-- Music Toggle Button (Mobile) -->
                 <button id="music-toggle-mobile" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -440,61 +477,64 @@
     <main class="flex-grow container mx-auto p-4 md:p-8">
 
         <!-- Home Page Section -->
-        <section id="home" class="page-section active-page bg-white p-6 md:p-10 rounded-xl shadow-lg mb-8">
+        <section id="home" class="page-section bg-white p-6 md:p-10 rounded-xl shadow-lg mb-8">
             <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-blue-700 mb-4 animate-fade-in-down">
-                    Diyor Yodgorov
-                </h1>
-                <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-8 animate-fade-in-up">
+                <!-- Yangi o'ram div qo'shildi va unga qattiq balandlik berildi -->
+                <div class="typing-text-container animate-fade-in-down content-fade-in">
+                    <h1 id="typing-text" class="text-4xl md:text-5xl font-extrabold text-blue-700">
+                        <!-- Typing animation will go here -->
+                    </h1>
+                </div>
+                <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-8 animate-fade-in-up content-fade-in">
                     Men Diyor Yodgorov, kreativ grafik dizayn sohasida faoliyat yuritaman. Har bir loyihaga innovatsion yondashuv va detallashtirilgan e'tibor bilan yondashib, mijozlarimning g'oyalarini vizual san'atga aylantiraman. Raqamli va bosma dizayn bo'yicha keng ko'lamli tajribaga egaman.
                 </p>
             </div>
 
-            <div class="mt-12">
+            <div class="mt-12 content-fade-in">
                 <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Ko'nikmalarim</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                    <!-- Ko'nikma elementi -->
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                    <!-- Skill item -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card content-fade-in">
                         <h3 class="text-xl font-semibold text-gray-900 mb-3">Adobe Photoshop</h3>
                         <div class="skill-bar-container">
                             <div class="skill-bar" style="width: 95%;"></div>
                         </div>
                         <p class="text-sm text-gray-600 mt-2">Professional daraja</p>
                     </div>
-                    <!-- Ko'nikma elementi -->
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                    <!-- Skill item -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card content-fade-in">
                         <h3 class="text-xl font-semibold text-gray-900 mb-3">Adobe Illustrator</h3>
                         <div class="skill-bar-container">
                             <div class="skill-bar" style="width: 90%;"></div>
                         </div>
                         <p class="text-sm text-gray-600 mt-2">Professional daraja</p>
                     </div>
-                    <!-- Ko'nikma elementi -->
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                    <!-- Skill item -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card content-fade-in">
                         <h3 class="text-xl font-semibold text-gray-900 mb-3">Adobe InDesign</h3>
                         <div class="skill-bar-container">
                             <div class="skill-bar" style="width: 80%;"></div>
                         </div>
                         <p class="text-sm text-gray-600 mt-2">Yuqori daraja</p>
                     </div>
-                    <!-- Ko'nikma elementi -->
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                    <!-- Skill item -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card content-fade-in">
                         <h3 class="text-xl font-semibold text-gray-900 mb-3">Figma</h3>
                         <div class="skill-bar-container">
                             <div class="skill-bar" style="width: 85%;"></div>
                         </div>
                         <p class="text-sm text-gray-600 mt-2">Yuqori daraja</p>
                     </div>
-                    <!-- Ko'nikma elementi -->
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                    <!-- Skill item -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card content-fade-in">
                         <h3 class="text-xl font-semibold text-gray-900 mb-3">CorelDRAW</h3>
                         <div class="skill-bar-container">
                             <div class="skill-bar" style="width: 75%;"></div>
                         </div>
                         <p class="text-sm text-gray-600 mt-2">O'rta daraja</p>
                     </div>
-                    <!-- Ko'nikma elementi -->
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                    <!-- Skill item -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card content-fade-in">
                         <h3 class="text-xl font-semibold text-gray-900 mb-3">Tipografiya</h3>
                         <div class="skill-bar-container">
                             <div class="skill-bar" style="width: 92%;"></div>
@@ -507,13 +547,13 @@
 
         <!-- Portfolio Page Section -->
         <section id="portfolio" class="page-section bg-white p-6 md:p-10 rounded-xl shadow-lg mb-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Mening Portfoliom</h2>
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center content-fade-in">Mening Portfoliom</h2>
 
-            <!-- Asosiy Portfolio ko'rinishi -->
+            <!-- Main Portfolio view -->
             <div id="portfolio-main-view">
-                <!-- SMM Dizaynlar Karuseli -->
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">SMM Dizaynlar</h3>
-                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4">
+                <!-- SMM Designs Carousel -->
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 content-fade-in">SMM Dizaynlar</h3>
+                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4 content-fade-in">
                     <div id="smm-carousel-track" class="carousel-track">
                         <div class="carousel-item"><img src="https://placehold.co/600x400/FF5733/FFFFFF?text=SMM+1" alt="SMM Dizayn 1" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
                         <div class="carousel-item"><img src="https://placehold.co/600x400/33FF57/FFFFFF?text=SMM+2" alt="SMM Dizayn 2" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
@@ -525,9 +565,9 @@
                     <button onclick="moveCarousel('smm', 1)" class="carousel-nav-button right">&gt;</button>
                 </div>
 
-                <!-- Mockupdagi Braynding & Poligrafiya Karuseli -->
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Mockupdagi Braynding & Poligrafiya</h3>
-                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4">
+                <!-- Branding & Polygraphy in Mockup Carousel -->
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 content-fade-in">Mockupdagi Braynding & Poligrafiya</h3>
+                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4 content-fade-in">
                     <div id="mockup-print-carousel-track" class="carousel-track">
                         <div class="carousel-item"><img src="https://placehold.co/600x400/FF5733/FFFFFF?text=Vizitka+Mockup+1" alt="Vizitka Mockup 1" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
                         <div class="carousel-item"><img src="https://placehold.co/600x400/33FF57/FFFFFF?text=Flyer+Mockup+2" alt="Flyer Mockup 2" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
@@ -539,9 +579,9 @@
                     <button onclick="moveCarousel('mockup-print', 1)" class="carousel-nav-button right">&gt;</button>
                 </div>
 
-                <!-- Katta Hajmli Dizaynlar Karuseli -->
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Katta Hajmli Dizaynlar (Mockupda)</h3>
-                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4">
+                <!-- Large Scale Designs Carousel -->
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 content-fade-in">Katta Hajmli Dizaynlar (Mockupda)</h3>
+                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4 content-fade-in">
                     <div id="large-scale-carousel-track" class="carousel-track">
                         <div class="carousel-item"><img src="https://placehold.co/600x400/FF5733/FFFFFF?text=Banner+Mockup+1" alt="Banner Mockup 1" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
                         <div class="carousel-item"><img src="https://placehold.co/600x400/33FF57/FFFFFF?text=Shtender+Mockup+2" alt="Shtender Mockup 2" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
@@ -553,11 +593,11 @@
                     <button onclick="moveCarousel('large-scale', 1)" class="carousel-nav-button right">&gt;</button>
                 </div>
 
-                <!-- Logotiplar Karuseli -->
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Logotiplar</h3>
-                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4">
+                <!-- Logos Carousel -->
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 content-fade-in">Logotiplar</h3>
+                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4 content-fade-in">
                     <div id="logos-carousel-track" class="carousel-track">
-                        <!-- Logobookni ko'rsatish uchun onclick bilan logotiplar -->
+                        <!-- Logos with onclick to show Logobook -->
                         <div class="carousel-item">
                             <img src="https://placehold.co/200x200/FF5733/FFFFFF?text=Logo+1" alt="Logo 1" class="w-32 h-32 md:w-48 md:h-48 object-contain rounded-md shadow-sm cursor-pointer hover:scale-105 transition-transform duration-300" onclick="showLogobook('logo1')">
                         </div>
@@ -579,47 +619,43 @@
                 </div>
             </div>
 
-            <!-- Logobook Detal ko'rinishi -->
+            <!-- Logobook Detail view -->
             <div id="logobook-detail-view" class="logobook-detail bg-white p-6 md:p-10 rounded-xl shadow-lg">
                 <button onclick="hideLogobook()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full mb-6 transition duration-300 ease-in-out transform hover:scale-105">
                     &larr; Portfolioga Qaytish
                 </button>
-                <h2 id="logobook-title" class="text-3xl font-bold text-gray-800 mb-6 text-center"></h2>
+                <h2 id="logobook-title" class="text-3xl font-bold text-gray-800 mb-6 text-center content-fade-in"></h2>
                 <div id="logobook-content" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- Rasmlar va ma'lumotlar bu yerda dinamik ravishda yuklanadi -->
+                    <!-- Images and info loaded dynamically here -->
                 </div>
             </div>
         </section>
 
-        <!-- Bog'lanish Sahifasi Qismi -->
+        <!-- Contact Page Section -->
         <section id="contact" class="page-section bg-white p-6 md:p-10 rounded-xl shadow-lg mb-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Menga Bog'lanish</h2>
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center content-fade-in">Ijtimoiy tarmoqlar</h2>
             <div class="max-w-2xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                    <!-- Telegram Havolasi -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 content-fade-in">
+                    <!-- Telegram Link -->
                     <a href="https://t.me/sallie_matrix" target="_blank" class="social-icon-link-container">
                         <i class="fab fa-telegram fa-2x mr-4 text-blue-500"></i>
                         <span class="contact-text text-lg">Telegram</span>
                     </a>
-                    <!-- Instagram Havolasi -->
+                    <!-- Instagram Link -->
                     <a href="https://instagram.com/diyor_yodgorov" target="_blank" class="social-icon-link-container">
                         <i class="fab fa-instagram fa-2x mr-4 text-pink-500"></i>
                         <span class="contact-text text-lg">Instagram</span>
                     </a>
-                    <!-- YouTube Havolasi -->
-                    <a href="https://www.youtube.com/@diyor_yodgorov" target="_blank" class="social-icon-link-container">
+                    <!-- YouTube Link -->
+                    <a href="https://youtube.com/diyor_yodgorov" target="_blank" class="social-icon-link-container">
                         <i class="fab fa-youtube fa-2x mr-4 text-red-600"></i>
                         <span class="contact-text text-lg">YouTube</span>
                     </a>
-                    <!-- Gmail Havolasi -->
-                    <a href="mailto:diyoryodgorov2007@gmail.com" class="social-icon-link-container">
-                        <i class="fas fa-envelope fa-2x mr-4 text-red-500"></i>
-                        <span class="contact-text text-lg">Gmail</span>
-                    </a>
+                    <!-- Gmail Link removed as per user request -->
                 </div>
 
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Xabar Yuborish</h3>
-                <form id="contact-form" class="bg-gray-50 p-6 rounded-lg shadow-md" onsubmit="sendEmail(event)">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 text-center content-fade-in">Xabar Yuborish</h3>
+                <form id="contact-form" class="bg-gray-50 p-6 rounded-lg shadow-md content-fade-in" onsubmit="sendEmail(event)">
                     <div class="mb-4">
                         <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Ismingiz:</label>
                         <input type="text" id="name" name="name" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500 transition duration-300" placeholder="Ismingizni kiriting" required>
@@ -648,7 +684,7 @@
         <p>&copy; 2025 Diyor Yodgorov. Barcha huquqlar himoyalangan.</p>
     </footer>
 
-    <!-- Xabar qutisi -->
+    <!-- Message Box -->
     <div id="message-box" class="message-box">
         <p id="message-box-text"></p>
         <button onclick="hideMessageBox()">OK</button>
@@ -656,9 +692,9 @@
 
     <script>
         // Dark/Light Mode Toggle Logic
-        const htmlElement = document.documentElement; // html tagini olish
+        const htmlElement = document.documentElement; // Get the html tag
 
-        // Joriy mavzuga qarab mavzu ikonalarini yangilash funksiyasi
+        // Function to update theme icons based on current theme
         function updateThemeIcons(isDark) {
             const sunIcons = document.querySelectorAll('[id^="sun-icon"]');
             const moonIcons = document.querySelectorAll('[id^="moon-icon"]');
@@ -667,7 +703,7 @@
             moonIcons.forEach(icon => icon.classList.toggle('hidden', !isDark));
         }
 
-        // Saqlangan mavzu afzalligini tekshirish yoki yorug'lik rejimiga o'tish
+        // Check saved theme preference or default to light mode
         const currentTheme = localStorage.getItem('theme');
         if (currentTheme === 'dark') {
             htmlElement.classList.add('dark');
@@ -677,7 +713,7 @@
             updateThemeIcons(false);
         }
 
-        // Mavzu almashtirish tugmalari uchun hodisa tinglovchisi
+        // Event listener for theme toggle buttons
         document.querySelectorAll('[id^="theme-toggle"]').forEach(button => {
             button.addEventListener('click', () => {
                 const isDark = htmlElement.classList.toggle('dark');
@@ -686,14 +722,14 @@
             });
         });
 
-        // Musiqa boshqaruv logikasi
+        // Music control logic
         const backgroundMusic = document.getElementById('background-music');
         const musicToggleDesktop = document.getElementById('music-toggle-desktop');
         const musicToggleMobile = document.getElementById('music-toggle-mobile');
         const musicIconDesktop = document.getElementById('music-icon-desktop');
         const musicIconMobile = document.getElementById('music-icon-mobile');
 
-        // Musiqa holatini yangilash funksiyasi (ikonka o'zgarishi bilan)
+        // Function to update music icon (with mute/unmute)
         function updateMusicIcon(isPlaying) {
             if (isPlaying) {
                 musicIconDesktop.classList.remove('fa-volume-mute');
@@ -708,7 +744,7 @@
             }
         }
 
-        // Musiqani ijro etish/to'xtatish funksiyasi
+        // Function to play/pause music
         function toggleMusic() {
             if (backgroundMusic.paused) {
                 backgroundMusic.play();
@@ -719,7 +755,7 @@
             }
         }
 
-        // Tugmalarga hodisa tinglovchilarni qo'shish
+        // Add event listeners to buttons
         if (musicToggleDesktop) {
             musicToggleDesktop.addEventListener('click', toggleMusic);
         }
@@ -727,20 +763,20 @@
             musicToggleMobile.addEventListener('click', toggleMusic);
         }
 
-        // Sahifa yuklanganda musiqani avtomatik ijro etishga urinish va ikonkani yangilash
-        // Ba'zi brauzerlar foydalanuvchi o'zaro aloqasisiz avtomatik ijroni bloklashi mumkin.
+        // Attempt to autoplay music on page load and update icon
+        // Note: Browsers may block autoplay without user interaction.
         window.addEventListener('load', () => {
-            backgroundMusic.volume = 0.5; // Ovoz balandligini sozlash
+            backgroundMusic.volume = 0.5; // Set volume
             backgroundMusic.play().then(() => {
                 updateMusicIcon(true);
             }).catch(error => {
-                console.log("Musiqa avtomatik ijro etilmadi:", error);
-                updateMusicIcon(false); // Agar avtomatik ijro bloklansa, ovozsiz ikonkani ko'rsatish
+                console.log("Music autoplay blocked:", error);
+                updateMusicIcon(false); // Show mute icon if autoplay is blocked
             });
         });
 
 
-        // Karusel logikasi
+        // Carousel logic
         const carousels = {
             'smm': { track: document.getElementById('smm-carousel-track'), index: 0 },
             'mockup-print': { track: document.getElementById('mockup-print-carousel-track'), index: 0 },
@@ -759,29 +795,29 @@
             const carousel = carousels[id];
             const items = carousel.track.children.length;
             const itemsPerPage = getItemsPerPage();
-            const maxIndex = Math.max(0, items - itemsPerPage); // maxIndex manfiy bo'lmasligini ta'minlash
+            const maxIndex = Math.max(0, items - itemsPerPage); // Ensure maxIndex is not negative
 
             carousel.index = carousel.index + direction;
 
-            // Chegaralar kesib o'tilsa, boshiga/oxiriga qaytish
+            // Loop back to start/end if boundaries are crossed
             if (carousel.index < 0) {
                 carousel.index = maxIndex;
             } else if (carousel.index > maxIndex) {
                 carousel.index = 0;
             }
 
-            const itemWidth = carousel.track.children[0].offsetWidth; // Elementning haqiqiy kengligini olish
+            const itemWidth = carousel.track.children[0].offsetWidth; // Get actual width of an item
             carousel.track.style.transform = `translateX(-${carousel.index * itemWidth}px)`;
         }
 
-        // Responsiv karusel uchun oyna o'lchamini o'zgartirishni boshqarish
+        // Handle window resize for responsive carousel
         window.addEventListener('resize', () => {
             for (const id in carousels) {
                 const carousel = carousels[id];
                 const itemsPerPage = getItemsPerPage();
                 const items = carousel.track.children.length;
                 const maxIndex = Math.max(0, items - itemsPerPage);
-                // O'lcham o'zgartirilganda indeks yangi maxIndexdan oshib ketmasligini sozlash
+                // Adjust index if it exceeds new maxIndex on resize
                 if (carousel.index > maxIndex) {
                     carousel.index = maxIndex;
                 }
@@ -791,21 +827,139 @@
         });
 
 
-        // Sahifa navigatsiya logikasi
-        function showPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(section => {
-                section.classList.remove('active-page');
-            });
-            document.getElementById(pageId).classList.add('active-page');
+        // Global variable to keep track of the currently active page element
+        let currentPageElement = null;
+        let typingAnimationInterval; // Global variable to store the typing animation interval
 
-            // Agar portfoliodan boshqa sahifaga o'tilsa yoki asosiy portfolioga qaytilsa, logobook detal ko'rinishini yashirish
-            if (pageId !== 'portfolio') {
+        // Page navigation logic with animation
+        function showPage(pageId) {
+            const newPageElement = document.getElementById(pageId);
+
+            if (currentPageElement === newPageElement) {
+                // If already on the requested page, just animate content if needed
+                animatePageContent(newPageElement);
+                if (pageId === 'home') {
+                    startTypingAnimation(); // Restart typing animation if already on home page
+                }
+                return;
+            }
+
+            if (currentPageElement) {
+                // Stop typing animation if leaving home page
+                if (currentPageElement.id === 'home') {
+                    stopTypingAnimation();
+                }
+                // Fade out current page
+                currentPageElement.classList.remove('active-page');
+                // Wait for fade-out transition to complete before changing display
+                currentPageElement.addEventListener('transitionend', function handler() {
+                    currentPageElement.style.display = 'none';
+                    currentPageElement.removeEventListener('transitionend', handler); // Remove listener to prevent multiple calls
+                    // Now show the new page
+                    activateNewPage(newPageElement);
+                }, { once: true }); // Ensure listener runs only once
+            } else {
+                // First page load, no existing page to fade out
+                activateNewPage(newPageElement);
+            }
+        }
+
+        function activateNewPage(newPageElement) {
+            // Hide all pages first to ensure correct display logic
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            newPageElement.style.display = 'block'; // Make it visible for animation
+            // Force reflow to ensure transition plays
+            void newPageElement.offsetWidth;
+            newPageElement.classList.add('active-page');
+            currentPageElement = newPageElement;
+
+            // Animate content of the new page
+            animatePageContent(newPageElement);
+
+            // Start typing animation if the new page is 'home'
+            if (newPageElement.id === 'home') {
+                startTypingAnimation();
+            }
+
+            // If portfolio page is activated, manage logobook views
+            if (newPageElement.id === 'portfolio') {
+                document.getElementById('logobook-detail-view').style.display = 'none';
+                document.getElementById('portfolio-main-view').style.display = 'block';
+            } else {
+                // If switching from portfolio to another page, ensure main view is active
                 document.getElementById('logobook-detail-view').style.display = 'none';
                 document.getElementById('portfolio-main-view').style.display = 'block';
             }
         }
 
-        // Mobil menyu almashtirish logikasi
+        function animatePageContent(pageElement) {
+            // Reset animations for all content on this page
+            pageElement.querySelectorAll('.content-fade-in').forEach(el => {
+                el.classList.remove('is-visible');
+            });
+
+            // Animate content with a slight stagger delay
+            let delay = 0;
+            pageElement.querySelectorAll('.content-fade-in').forEach(el => {
+                setTimeout(() => {
+                    el.classList.add('is-visible');
+                }, delay);
+                delay += 100; // Stagger animation by 100ms
+            });
+        }
+
+        // Typing animation logic for Home page title
+        const typingTextElement = document.getElementById('typing-text');
+        const phrases = ["Diyor Yodgorov", "Grafik Dizayner"];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+            const currentPhrase = phrases[phraseIndex];
+            if (isDeleting) {
+                typingTextElement.textContent = currentPhrase.substring(0, charIndex--);
+            } else {
+                typingTextElement.textContent = currentPhrase.substring(0, charIndex++);
+            }
+
+            let typingSpeed = 150; // Typing speed
+            if (isDeleting) {
+                typingSpeed /= 2; // Deleting faster
+            }
+
+            if (!isDeleting && charIndex === currentPhrase.length + 1) {
+                typingSpeed = 1000; // Pause at end of typing
+                isDeleting = true;
+            } else if (isDeleting && charIndex < 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                charIndex = 0;
+                typingSpeed = 500; // Pause before typing next phrase
+            }
+
+            typingAnimationInterval = setTimeout(type, typingSpeed);
+        }
+
+        function startTypingAnimation() {
+            // Clear any existing animation to prevent multiple instances
+            stopTypingAnimation();
+            charIndex = 0;
+            isDeleting = false;
+            phraseIndex = 0; // Start from the first phrase
+            type();
+        }
+
+        function stopTypingAnimation() {
+            clearTimeout(typingAnimationInterval);
+            typingTextElement.textContent = ''; // Clear text when stopping
+        }
+
+
+        // Mobile menu toggle logic
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
@@ -822,10 +976,10 @@
             mobileMenu.classList.remove('open');
         }
 
-        // Navbar aylanish animatsiyasi
+        // Navbar scroll animation
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('main-navbar');
-            if (window.scrollY > 50) { // Aylanish chegarasini kerakli darajada sozlash
+            if (window.scrollY > 50) { // Adjust scroll threshold as needed
                 navbar.classList.add('nav-scrolled');
             } else {
                 navbar.classList.remove('nav-scrolled');
@@ -833,7 +987,7 @@
         });
 
 
-        // Logobook ma'lumotlari (soxta ma'lumotlar)
+        // Logobook data (dummy data)
         const logobookData = {
             'logo1': {
                 title: 'Kompaniya A Logotipi',
@@ -925,11 +1079,11 @@
 
             document.getElementById('logobook-title').innerText = data.title;
             const logobookContent = document.getElementById('logobook-content');
-            logobookContent.innerHTML = ''; // Oldingi kontentni tozalash
+            logobookContent.innerHTML = ''; // Clear previous content
 
-            // To'liq rasmlar
+            // Full Images
             const fullImagesHtml = `
-                <div>
+                <div class="content-fade-in">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">To'liq Rasmlar</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         ${data.fullImages.map(imgSrc => `<img src="${imgSrc}" alt="${data.title} to'liq rasm" class="logobook-image">`).join('')}
@@ -938,9 +1092,9 @@
             `;
             logobookContent.innerHTML += fullImagesHtml;
 
-            // Tavsif
+            // Description
             const descriptionHtml = `
-                <div>
+                <div class="content-fade-in">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Logotip Haqida Ma'lumot</h3>
                     <p class="text-gray-700 leading-relaxed mb-3">${data.description}</p>
                     <p class="text-gray-700 mb-1"><strong>Ranglar:</strong> ${data.colors}</p>
@@ -949,9 +1103,9 @@
             `;
             logobookContent.innerHTML += descriptionHtml;
 
-            // Qo'llanilish holatlari (Mockuplar)
+            // Usage cases (Mockups)
             const usageHtml = `
-                <div class="lg:col-span-2">
+                <div class="lg:col-span-2 content-fade-in">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Qo'llanilish Holatlari (Mockuplar)</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         ${data.usage.map(imgSrc => `<img src="${imgSrc}" alt="${data.title} qo'llanilish mockapi" class="logobook-image">`).join('')}
@@ -959,19 +1113,29 @@
                 </div>
             `;
             logobookContent.innerHTML += usageHtml;
+
+            // Animate content when logobook detail view is shown
+            animatePageContent(logobookDetailView);
         }
 
         function hideLogobook() {
-            document.getElementById('logobook-detail-view').style.display = 'none';
-            document.getElementById('portfolio-main-view').style.display = 'block';
+            const logobookDetailView = document.getElementById('logobook-detail-view');
+            logobookDetailView.classList.remove('active-page'); // Start fade out
+            logobookDetailView.addEventListener('transitionend', function handler() {
+                logobookDetailView.style.display = 'none';
+                logobookDetailView.removeEventListener('transitionend', handler);
+                document.getElementById('portfolio-main-view').style.display = 'block';
+                // Animate content of the main portfolio view when it becomes active again
+                animatePageContent(document.getElementById('portfolio-main-view'));
+            }, { once: true });
         }
 
-        // Sahifa dastlab yuklanganda: bosh sahifani faol qilish
+        // Initial page load: activate home page and animate its content
         document.addEventListener('DOMContentLoaded', () => {
             showPage('home');
         });
 
-        // Xabar qutisini ko'rsatish funksiyasi
+        // Message box functions
         function showMessageBox(message) {
             const messageBox = document.getElementById('message-box');
             const messageBoxText = document.getElementById('message-box-text');
@@ -980,24 +1144,22 @@
             messageBox.style.animation = 'fadeIn 0.3s ease-out';
         }
 
-        // Xabar qutisini yashirish funksiyasi
         function hideMessageBox() {
             const messageBox = document.getElementById('message-box');
             messageBox.style.animation = 'fadeOut 0.3s ease-in';
             setTimeout(() => {
                 messageBox.style.display = 'none';
-            }, 300); // Animatsiya tugagandan so'ng yashirish
+            }, 300); // Hide after animation completes
         }
 
-        // Email yuborish funksiyasi
+        // Email sending function
         async function sendEmail(event) {
-            event.preventDefault(); // Shaklning standart yuborilishini oldini olish
+            event.preventDefault(); // Prevent default form submission
 
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const message = document.getElementById('message').value;
 
-            // Ma'lumotlarni serverga yuborish uchun ob'ekt yaratish
             const formData = {
                 name: name,
                 email: email,
@@ -1005,9 +1167,8 @@
             };
 
             try {
-                // DIQQAT: Bu yerda endi sizning backend serveringizning URL'ini ko'rsatishingiz kerak.
-                // Agar serveringiz localhost:3000 da ishlayotgan bo'lsa:
-                const response = await fetch('http://localhost:3000/send-email', {
+                // IMPORTANT: Replace with your deployed Render server URL
+                const response = await fetch('https://my-email-backend.onrender.com/send-email', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1017,17 +1178,16 @@
 
                 if (response.ok) {
                     showMessageBox("Xabaringiz muvaffaqiyatli yuborildi!");
-                    document.getElementById('contact-form').reset(); // Shaklni tozalash
+                    document.getElementById('contact-form').reset(); // Clear the form
                 } else {
-                    const errorData = await response.json(); // Serverdan kelgan xato xabarini o'qish
-                    // Serverdan kelgan aniq xato xabarini ko'rsatish
+                    const errorData = await response.json(); // Read error message from server
                     showMessageBox(`Xabar yuborishda xato yuz berdi: ${errorData.message || 'Noma\'lum xato'}`);
-                    console.error('Server xatosi:', response.status, response.statusText, errorData);
+                    console.error('Server error:', response.status, response.statusText, errorData);
                 }
             } catch (error) {
-                // Tarmoq xatosi yoki backend mavjud bo'lmasa
+                // Network error or backend not available
                 showMessageBox("Tarmoq xatosi. Iltimos, serveringiz ishlayotganligiga ishonch hosil qiling.");
-                console.error('Xabar yuborishda xato:', error);
+                console.error('Error sending message:', error);
             }
         }
     </script>
