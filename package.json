@@ -18,6 +18,6 @@
   "dependencies": {
     "express": "^4.18.2",
     "nodemailer": "^6.9.8",
-    "dotenv": "^16.4.5"  // BU QATOR QO'SHILDI
+    "dotenv": "^16.4.5"
   }
 }
