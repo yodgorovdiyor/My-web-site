@@ -2,9 +2,9 @@
   "name": "email-server",
   "version": "1.0.0",
   "description": "A simple Node.js server for sending emails.",
-  "main": "server.js",
+  "main": "files/server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node files/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

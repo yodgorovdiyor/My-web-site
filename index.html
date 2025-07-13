@@ -404,7 +404,8 @@
 
     <!-- Background music -->
     <audio id="background-music" loop autoplay>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <!-- music.m4a fayli endi files/ papkasida joylashgan -->
+        <source src="files/music.m4a" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
@@ -1168,8 +1169,9 @@
 
             try {
                 // MUHIM: Bu yerga Render serveringizning haqiqiy URL manzilini qo'ying!
-                // Masalan: 'https://my-email-backend.onrender.com/send-email'
-                const response = await fetch('https://my-email-backend.onrender.com/send-email', {
+                // Sizning saytingizning asosiy URL manzili: https://my-web-site-mudp.onrender.com
+                // Shunday qilib, fetch URL quyidagicha bo'lishi kerak:
+                const response = await fetch('https://my-web-site-mudp.onrender.com/send-email', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
