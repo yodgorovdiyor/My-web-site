@@ -1,0 +1,24 @@
+{
+  "name": "email-sender-backend",
+  "version": "1.0.0",
+  "description": "Veb-saytdan elektron pochta yuborish uchun Node.js backend serveri.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "email",
+    "nodemailer",
+    "nodejs",
+    "express"
+  ],
+  "author": "Sizning Ismingiz",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.13"
+  }
+}

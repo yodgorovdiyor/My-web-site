@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafik Dizayner Portfoliosi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Keyframes for rotating conic gradient background in light mode */
+        @keyframes rotate-gradient {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Base styles for light mode */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #333; /* To'q rangli matn */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative; /* Pseudo-element joylashuvi uchun kerak */
+            overflow-x: hidden; /* Gradientdan gorizontal aylanishni oldini oladi */
+        }
+
+        /* Animatsiyali gradient fon uchun pseudo-element */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%; /* Ko'proq maydonni qoplash uchun ekrandan tashqarida boshlanadi */
+            left: -50%; /* Ko'proq maydonni qoplash uchun ekrandan tashqarida boshlanadi */
+            width: 200%; /* Harakatga ruxsat berish uchun kattaroq qilingan */
+            height: 200%; /* Harakatga ruxsat berish uchun kattaroq qilingan */
+            /* Yorug'lik rejimi gradient ranglari */
+            background: conic-gradient(from 0deg at 50% 50%, #a7f3d0, #bfdbfe, #c7d2fe, #fbcfe8, #fef08a, #a7f3d0);
+            animation: rotate-gradient 20s linear infinite; /* Aylanuvchi animatsiyani qo'llash */
+            z-index: -1; /* Orqaga yuborish */
+            opacity: 0.3; /* Nozik qilish */
+            filter: blur(80px); /* Gradient chiziqlarini yumshatish */
+        }
+
+        .page-section {
+            display: none;
+            background-color: #ffffff; /* Yorug' kartochka foni */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .active-page {
+            display: block;
+        }
+        .carousel-container {
+            overflow: hidden;
+            position: relative;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-item {
+            flex: 0 0 auto;
+            width: 100%; /* Mobil uchun standart 100% kenglik */
+            padding: 0.5rem;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Carousel elementlari uchun responsiv kengliklar */
+        @media (min-width: 640px) { /* sm */
+            .carousel-item {
+                width: 50%; /* Kichik ekranlarda qatorda 2 ta element */
+            }
+        }
+        @media (min-width: 768px) { /* md */
+            .carousel-item {
+                width: 33.333%; /* O'rta ekranlarda qatorda 3 ta element */
+            }
+        }
+        @media (min-width: 1024px) { /* lg */
+            .carousel-item {
+                width: 25%; /* Katta ekranlarda qatorda 4 ta element */
+            }
+        }
+        .carousel-nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            z-index: 10;
+            user-select: none;
+            transition: background-color 0.3s ease;
+        }
+        .carousel-nav-button.left {
+            left: 0.5rem; /* Kichik ekranlar uchun moslashtirilgan */
+        }
+        .carousel-nav-button.right {
+            right: 0.5rem; /* Kichik ekranlar uchun moslashtirilgan */
+        }
+        @media (min-width: 768px) { /* md */
+            .carousel-nav-button.left {
+                left: 1rem;
+            }
+            .carousel-nav-button.right {
+                right: 1rem;
+            }
+        }
+
+        .skill-bar-container {
+            background-color: #e0e0e0; /* Yorug' ko'nikma paneli foni */
+            border-radius: 0.5rem;
+            height: 0.75rem;
+            overflow: hidden;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+        .skill-bar {
+            background-color: #3b82f6; /* Moviy-500 */
+            height: 100%;
+            border-radius: 0.5rem;
+            transition: width 0.5s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Qorong'u rejim stillari (html tagida 'dark' klassi bo'lganda qo'llaniladi) */
+        html.dark body::before {
+            /* Qorong'u rejim foni: to'q kulrang */
+            background: #1a202c; /* To'q kulrang rang */
+            animation: none; /* Qattiq rang uchun animatsiyani olib tashlash */
+            filter: none; /* Qattiq rang uchun xiralikni olib tashlash */
+            opacity: 1; /* To'liq shaffof qilish */
+        }
+
+        html.dark .bg-white {
+            background-color: #2d3748; /* To'qroq kartochka foni */
+            color: #e2e8f0;
+        }
+        html.dark .text-gray-800 {
+            color: #e2e8f0;
+        }
+        html.dark .text-gray-700 {
+            color: #cbd5e0;
+        }
+        html.dark .text-gray-600 {
+            color: #a0aec0;
+        }
+        html.dark .text-gray-900 {
+            color: #e2e8f0;
+        }
+        html.dark .bg-gray-50 {
+            background-color: #4a5568; /* To'qroq ko'nikma elementi/kontakt elementi foni */
+        }
+        html.dark .bg-gray-100 {
+            background-color: #4a5568; /* To'qroq karusel konteyner foni */
+        }
+        html.dark .skill-bar-container {
+            background-color: #1f2937; /* Kontrast uchun to'qroq ko'nikma paneli konteyneri */
+        }
+        html.dark .logobook-image {
+            background-color: #2d3748; /* To'q rasm foni */
+        }
+        html.dark .shadow-md {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        html.dark .shadow-lg {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+        }
+        html.dark .shadow-xl {
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.3);
+        }
+        html.dark .shadow-sm {
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        html.dark .shadow-inner {
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
+        html.dark input, html.dark textarea {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+        html.dark input:focus, html.dark textarea:focus {
+            border-color: #63b3ed; /* Qorong'u rejim fokus uchun Moviy-300 */
+        }
+        html.dark .carousel-nav-button {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Mobil menyu maxsus stillari */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 70%; /* Mobil uchun kenglikni moslashtirish */
+            max-width: 300px; /* Planshetlar uchun maksimal kenglik */
+            height: 100%;
+            background-color: #ffffff; /* Yorug' rejim foni */
+            z-index: 100;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        html.dark .mobile-menu {
+            background-color: #2d3748; /* Qorong'u rejim foni */
+            box-shadow: -4px 0 10px rgba(0,0,0,0.3);
+        }
+        .mobile-menu-close-btn {
+            align-self: flex-end;
+            margin-bottom: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #333;
+            cursor: pointer;
+        }
+        html.dark .mobile-menu-close-btn {
+            color: #e2e8f0;
+        }
+
+        /* Mobil menyu havolalari rangi tuzatish - yorug' rejimda o'qishni ta'minlash */
+        .mobile-menu ul li a {
+            color: #1a202c; /* Yorug' rejim uchun to'q matn */
+        }
+        html.dark .mobile-menu ul li a {
+            color: #e2e8f0; /* Qorong'u rejim uchun yorug' matn */
+        }
+
+        /* Navbar aylanish animatsiyasi */
+        .nav-scrolled {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            background-color: #f8f8f8; /* Aylanishda biroz boshqacha fon */
+        }
+        html.dark .nav-scrolled {
+            background-color: #3a455a; /* Qorong'u rejimda aylanishda to'qroq fon */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Navigatsiya paneli havolasi hover ranglari */
+        .navbar-link-item a {
+            transition: color 0.3s ease;
+        }
+        .navbar-link-item a:hover {
+            color: #1d4ed8; /* Yorug' rejim hover uchun Moviy-700 */
+        }
+        html.dark .navbar-link-item a:hover {
+            color: #93c5fd; /* Qorong'u rejim hover uchun Moviy-300 */
+        }
+
+        /* Ijtimoiy ikonka hover animatsiyasi */
+        .social-icon-link-container {
+            display: flex;
+            align-items: center;
+            background-color: #f9fafb; /* Havola konteyneri uchun yorug' fon */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* shadow-sm */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease, background-color 0.3s ease;
+            text-decoration: none; /* Odatiy bo'yicha tagida chiziq bo'lmasligini ta'minlash */
+        }
+        .social-icon-link-container:hover {
+            transform: translateY(-5px); /* Hoverda ko'tarish effekti */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+            text-decoration: none; /* Hoverda tagida chiziq bo'lmasligini ta'minlash */
+        }
+        html.dark .social-icon-link-container {
+            background-color: #4a5568; /* Havola konteyneri uchun to'q fon */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        html.dark .social-icon-link-container:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-icon-link-container i { /* Font Awesome ikonalarini nishonlash */
+            transition: color 0.3s ease;
+        }
+        /* Ikonkalar uchun maxsus hover ranglari */
+        .social-icon-link-container:hover .text-blue-500 { color: #2563eb; } /* Telegram: Moviy-700 */
+        .social-icon-link-container:hover .text-pink-500 { color: #ec4899; } /* Instagram: Pushti-600 */
+        .social-icon-link-container:hover .text-red-600 { color: #dc2626; } /* YouTube: Qizil-700 */
+        .social-icon-link-container:hover .text-red-500 { color: #dc2626; } /* Gmail: Qizil-700 */
+        html.dark .social-icon-link-container:hover .text-gray-300 { color: #9ca3af; } /* Gmail dark: Kulrang-400 */
+
+        /* Kontakt havolasi matn rangi - mavzular bo'yicha o'qishni ta'minlash uchun tuzatilgan */
+        .social-icon-link-container .contact-text {
+            color: #333; /* Yorug' rejim uchun to'q matn */
+            transition: color 0.3s ease;
+        }
+        html.dark .social-icon-link-container .contact-text {
+            color: #e2e8f0; /* Qorong'u rejim uchun yorug' matn */
+        }
+        /* Kontakt havolalarida hoverda tagida chiziq bo'lmasligini ta'minlash */
+        .social-icon-link-container .contact-text:hover {
+            text-decoration: none;
+        }
+
+        /* Skill item hover animations */
+        .skill-item-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+        }
+        .skill-item-card:hover {
+            transform: translateY(-5px); /* Lift effect */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-lg */
+        }
+        html.dark .skill-item-card:hover {
+            box-shadow: 0 10px 20px rgba(66, 153, 225, 0.2); /* Subtle blue glow in dark mode */
+        }
+
+        /* Xabar yuborish holati uchun xabar qutisi stillari */
+        .message-box {
+            display: none; /* Odatiy bo'yicha yashirilgan */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2d3748; /* Dark background */
+            color: #e2e8f0; /* Light text */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            text-align: center;
+            font-size: 1.1rem;
+            max-width: 90%;
+            width: 400px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .message-box button {
+            background-color: #4299e1; /* Blue-500 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .message-box button:hover {
+            background-color: #3182ce; /* Blue-600 */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Orqa fon musiqasi -->
+    <audio id="background-music" loop autoplay>
+        <!-- Musiqa faylingizni bu yerga joylashtiring. Misol: src="music/your-song.mp3" -->
+        <!-- Hozircha joylashtiruvchi audio fayl ishlatiladi. Haqiqiy fayl bilan almashtiring. -->
+        <source src="music.m4a" type="audio/mpeg">
+        Brauzeringiz audio elementini qo'llab-quvvatlamaydi.
+    </audio>
+
+    <!-- Navbar -->
+    <nav id="main-navbar" class="bg-white shadow-md p-4 sticky top-0 z-50 transition-all duration-300 ease-in-out">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">Dizayner Portfoliosi</div>
+
+            <!-- Desktop Navigation -->
+            <ul class="hidden md:flex items-center space-x-6">
+                <li class="navbar-link-item"><a href="#" onclick="showPage('home')" class="text-gray-600 font-medium transition duration-300">Bosh Sahifa</a></li>
+                <li class="navbar-link-item"><a href="#" onclick="showPage('portfolio')" class="text-gray-600 font-medium transition duration-300">Portfolio</a></li>
+                <li class="navbar-link-item"><a href="#" onclick="showPage('contact')" class="text-gray-600 font-medium transition duration-300">Bog'lanish</a></li>
+                <li class="flex items-center space-x-4">
+                    <!-- Music Toggle Button (Desktop) -->
+                    <button id="music-toggle-desktop" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i id="music-icon-desktop" class="fas fa-music w-6 h-6"></i>
+                    </button>
+                    <!-- Theme Toggle Button (Desktop) -->
+                    <button id="theme-toggle-desktop" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <!-- Sun icon for light mode, Moon icon for dark mode -->
+                        <svg id="sun-icon-desktop" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 00-.707-.293h-.005a1 1 0 00-.707 1.707l.707.707a1 1 0 001.414-1.414l-.707-.707zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zm-4.95-4.464a1 1 0 00-.707-.293c-.411 0-.814.16-.95.293l-.707.707a1 1 0 001.414 1.414l-.707-.707a1 1 0 00-.707-1.707zm-2.12-10.607a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM2 10a1 1 0 011-1h1a1 1 0 110 2H3a1 1 0 01-1-1z"/>
+                        </svg>
+                        <svg id="moon-icon-desktop" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                        </svg>
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Mobile Menu Button (Hamburger) -->
+            <button id="mobile-menu-button" class="md:hidden p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Sidebar -->
+    <div id="mobile-menu" class="mobile-menu">
+        <button id="mobile-menu-close-button" class="mobile-menu-close-btn">
+            &times;
+        </button>
+        <ul class="flex flex-col space-y-4 text-center">
+            <li class="py-2 border-b border-gray-200 dark:border-gray-700"><a href="#" onclick="showPage('home'); closeMobileMenu();" class="block font-medium text-lg transition duration-300 hover:text-blue-600 dark:hover:text-blue-400">Bosh Sahifa</a></li>
+            <li class="py-2 border-b border-gray-200 dark:border-gray-700"><a href="#" onclick="showPage('portfolio'); closeMobileMenu();" class="block font-medium text-lg transition duration-300 hover:text-blue-600 dark:hover:text-blue-400">Portfolio</a></li>
+            <li class="py-2"><a href="#" onclick="showPage('contact'); closeMobileMenu();" class="block font-medium text-lg transition duration-300 hover:text-blue-600 dark:hover:text-blue-400">Bog'lanish</a></li>
+            <li class="pt-4 flex justify-center items-center space-x-4">
+                <!-- Music Toggle Button (Mobile) -->
+                <button id="music-toggle-mobile" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i id="music-icon-mobile" class="fas fa-music w-6 h-6"></i>
+                </button>
+                <!-- Theme Toggle Button (Mobile) -->
+                <button id="theme-toggle-mobile" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <!-- Sun icon for light mode, Moon icon for dark mode -->
+                    <svg id="sun-icon-mobile" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 00-.707-.293h-.005a1 1 0 00-.707 1.707l.707.707a1 1 0 001.414-1.414l-.707-.707zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zm-4.95-4.464a1 1 0 00-.707-.293c-.411 0-.814.16-.95.293l-.707.707a1 1 0 001.414 1.414l-.707-.707a1 1 0 00-.707-1.707zm-2.12-10.607a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM2 10a1 1 0 011-1h1a1 1 0 110 2H3a1 1 0 01-1-1z"/>
+                        </svg>
+                        <svg id="moon-icon-mobile" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                        </svg>
+                    </button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto p-4 md:p-8">
+
+        <!-- Home Page Section -->
+        <section id="home" class="page-section active-page bg-white p-6 md:p-10 rounded-xl shadow-lg mb-8">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-blue-700 mb-4 animate-fade-in-down">
+                    Diyor Yodgorov
+                </h1>
+                <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-8 animate-fade-in-up">
+                    Men Diyor Yodgorov, kreativ grafik dizayn sohasida faoliyat yuritaman. Har bir loyihaga innovatsion yondashuv va detallashtirilgan e'tibor bilan yondashib, mijozlarimning g'oyalarini vizual san'atga aylantiraman. Raqamli va bosma dizayn bo'yicha keng ko'lamli tajribaga egaman.
+                </p>
+            </div>
+
+            <div class="mt-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Ko'nikmalarim</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    <!-- Ko'nikma elementi -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Adobe Photoshop</h3>
+                        <div class="skill-bar-container">
+                            <div class="skill-bar" style="width: 95%;"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">Professional daraja</p>
+                    </div>
+                    <!-- Ko'nikma elementi -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Adobe Illustrator</h3>
+                        <div class="skill-bar-container">
+                            <div class="skill-bar" style="width: 90%;"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">Professional daraja</p>
+                    </div>
+                    <!-- Ko'nikma elementi -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Adobe InDesign</h3>
+                        <div class="skill-bar-container">
+                            <div class="skill-bar" style="width: 80%;"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">Yuqori daraja</p>
+                    </div>
+                    <!-- Ko'nikma elementi -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Figma</h3>
+                        <div class="skill-bar-container">
+                            <div class="skill-bar" style="width: 85%;"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">Yuqori daraja</p>
+                    </div>
+                    <!-- Ko'nikma elementi -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">CorelDRAW</h3>
+                        <div class="skill-bar-container">
+                            <div class="skill-bar" style="width: 75%;"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">O'rta daraja</p>
+                    </div>
+                    <!-- Ko'nikma elementi -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md skill-item-card">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Tipografiya</h3>
+                        <div class="skill-bar-container">
+                            <div class="skill-bar" style="width: 92%;"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">Professional daraja</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Page Section -->
+        <section id="portfolio" class="page-section bg-white p-6 md:p-10 rounded-xl shadow-lg mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Mening Portfoliom</h2>
+
+            <!-- Asosiy Portfolio ko'rinishi -->
+            <div id="portfolio-main-view">
+                <!-- SMM Dizaynlar Karuseli -->
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">SMM Dizaynlar</h3>
+                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4">
+                    <div id="smm-carousel-track" class="carousel-track">
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/FF5733/FFFFFF?text=SMM+1" alt="SMM Dizayn 1" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/33FF57/FFFFFF?text=SMM+2" alt="SMM Dizayn 2" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/5733FF/FFFFFF?text=SMM+3" alt="SMM Dizayn 3" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/FF33A1/FFFFFF?text=SMM+4" alt="SMM Dizayn 4" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/33A1FF/FFFFFF?text=SMM+5" alt="SMM Dizayn 5" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                    </div>
+                    <button onclick="moveCarousel('smm', -1)" class="carousel-nav-button left">&lt;</button>
+                    <button onclick="moveCarousel('smm', 1)" class="carousel-nav-button right">&gt;</button>
+                </div>
+
+                <!-- Mockupdagi Braynding & Poligrafiya Karuseli -->
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Mockupdagi Braynding & Poligrafiya</h3>
+                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4">
+                    <div id="mockup-print-carousel-track" class="carousel-track">
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/FF5733/FFFFFF?text=Vizitka+Mockup+1" alt="Vizitka Mockup 1" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/33FF57/FFFFFF?text=Flyer+Mockup+2" alt="Flyer Mockup 2" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/5733FF/FFFFFF?text=Buklet+Mockup+3" alt="Buklet Mockup 3" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/FF33A1/FFFFFF?text=Vizitka+Mockup+4" alt="Vizitka Mockup 4" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/33A1FF/FFFFFF?text=Flyer+Mockup+5" alt="Flyer Mockup 5" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                    </div>
+                    <button onclick="moveCarousel('mockup-print', -1)" class="carousel-nav-button left">&lt;</button>
+                    <button onclick="moveCarousel('mockup-print', 1)" class="carousel-nav-button right">&gt;</button>
+                </div>
+
+                <!-- Katta Hajmli Dizaynlar Karuseli -->
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Katta Hajmli Dizaynlar (Mockupda)</h3>
+                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4">
+                    <div id="large-scale-carousel-track" class="carousel-track">
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/FF5733/FFFFFF?text=Banner+Mockup+1" alt="Banner Mockup 1" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/33FF57/FFFFFF?text=Shtender+Mockup+2" alt="Shtender Mockup 2" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/5733FF/FFFFFF?text=Bilbord+Mockup+3" alt="Bilbord Mockup 3" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/FF33A1/FFFFFF?text=Banner+Mockup+4" alt="Banner Mockup 4" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                        <div class="carousel-item"><img src="https://placehold.co/600x400/33A1FF/FFFFFF?text=Shtender+Mockup+5" alt="Shtender Mockup 5" class="w-full h-48 md:h-64 object-cover rounded-md shadow-sm"></div>
+                    </div>
+                    <button onclick="moveCarousel('large-scale', -1)" class="carousel-nav-button left">&lt;</button>
+                    <button onclick="moveCarousel('large-scale', 1)" class="carousel-nav-button right">&gt;</button>
+                </div>
+
+                <!-- Logotiplar Karuseli -->
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Logotiplar</h3>
+                <div class="carousel-container relative rounded-lg shadow-md mb-8 bg-gray-100 p-4">
+                    <div id="logos-carousel-track" class="carousel-track">
+                        <!-- Logobookni ko'rsatish uchun onclick bilan logotiplar -->
+                        <div class="carousel-item">
+                            <img src="https://placehold.co/200x200/FF5733/FFFFFF?text=Logo+1" alt="Logo 1" class="w-32 h-32 md:w-48 md:h-48 object-contain rounded-md shadow-sm cursor-pointer hover:scale-105 transition-transform duration-300" onclick="showLogobook('logo1')">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://placehold.co/200x200/33FF57/FFFFFF?text=Logo+2" alt="Logo 2" class="w-32 h-32 md:w-48 md:h-48 object-contain rounded-md shadow-sm cursor-pointer hover:scale-105 transition-transform duration-300" onclick="showLogobook('logo2')">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://placehold.co/200x200/5733FF/FFFFFF?text=Logo+3" alt="Logo 3" class="w-32 h-32 md:w-48 md:h-48 object-contain rounded-md shadow-sm cursor-pointer hover:scale-105 transition-transform duration-300" onclick="showLogobook('logo3')">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://placehold.co/200x200/FF33A1/FFFFFF?text=Logo+4" alt="Logo 4" class="w-32 h-32 md:w-48 md:h-48 object-contain rounded-md shadow-sm cursor-pointer hover:scale-105 transition-transform duration-300" onclick="showLogobook('logo4')">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://placehold.co/200x200/33A1FF/FFFFFF?text=Logo+5" alt="Logo 5" class="w-32 h-32 md:w-48 md:h-48 object-contain rounded-md shadow-sm cursor-pointer hover:scale-105 transition-transform duration-300" onclick="showLogobook('logo5')">
+                        </div>
+                    </div>
+                    <button onclick="moveCarousel('logos', -1)" class="carousel-nav-button left">&lt;</button>
+                    <button onclick="moveCarousel('logos', 1)" class="carousel-nav-button right">&gt;</button>
+                </div>
+            </div>
+
+            <!-- Logobook Detal ko'rinishi -->
+            <div id="logobook-detail-view" class="logobook-detail bg-white p-6 md:p-10 rounded-xl shadow-lg">
+                <button onclick="hideLogobook()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full mb-6 transition duration-300 ease-in-out transform hover:scale-105">
+                    &larr; Portfolioga Qaytish
+                </button>
+                <h2 id="logobook-title" class="text-3xl font-bold text-gray-800 mb-6 text-center"></h2>
+                <div id="logobook-content" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Rasmlar va ma'lumotlar bu yerda dinamik ravishda yuklanadi -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Bog'lanish Sahifasi Qismi -->
+        <section id="contact" class="page-section bg-white p-6 md:p-10 rounded-xl shadow-lg mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Menga Bog'lanish</h2>
+            <div class="max-w-2xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <!-- Telegram Havolasi -->
+                    <a href="https://t.me/sallie_matrix" target="_blank" class="social-icon-link-container">
+                        <i class="fab fa-telegram fa-2x mr-4 text-blue-500"></i>
+                        <span class="contact-text text-lg">Telegram</span>
+                    </a>
+                    <!-- Instagram Havolasi -->
+                    <a href="https://instagram.com/diyor_yodgorov" target="_blank" class="social-icon-link-container">
+                        <i class="fab fa-instagram fa-2x mr-4 text-pink-500"></i>
+                        <span class="contact-text text-lg">Instagram</span>
+                    </a>
+                    <!-- YouTube Havolasi -->
+                    <a href="https://www.youtube.com/@diyor_yodgorov" target="_blank" class="social-icon-link-container">
+                        <i class="fab fa-youtube fa-2x mr-4 text-red-600"></i>
+                        <span class="contact-text text-lg">YouTube</span>
+                    </a>
+                    <!-- Gmail Havolasi -->
+                    <a href="mailto:diyoryodgorov2007@gmail.com" class="social-icon-link-container">
+                        <i class="fas fa-envelope fa-2x mr-4 text-red-500"></i>
+                        <span class="contact-text text-lg">Gmail</span>
+                    </a>
+                </div>
+
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Xabar Yuborish</h3>
+                <form id="contact-form" class="bg-gray-50 p-6 rounded-lg shadow-md" onsubmit="sendEmail(event)">
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Ismingiz:</label>
+                        <input type="text" id="name" name="name" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500 transition duration-300" placeholder="Ismingizni kiriting" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Elektron Pochta:</label>
+                        <input type="email" id="email" name="email" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500 transition duration-300" placeholder="pochta@example.com" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="message" class="block text-gray-700 text-sm font-bold mb-2">Xabar:</label>
+                        <textarea id="message" name="message" rows="5" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500 transition duration-300" placeholder="Xabaringizni yozing..." required></textarea>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                            Yuborish
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-6 text-center mt-auto rounded-t-xl shadow-inner">
+        <p>&copy; 2025 Diyor Yodgorov. Barcha huquqlar himoyalangan.</p>
+    </footer>
+
+    <!-- Xabar qutisi -->
+    <div id="message-box" class="message-box">
+        <p id="message-box-text"></p>
+        <button onclick="hideMessageBox()">OK</button>
+    </div>
+
+    <script>
+        // Dark/Light Mode Toggle Logic
+        const htmlElement = document.documentElement; // html tagini olish
+
+        // Joriy mavzuga qarab mavzu ikonalarini yangilash funksiyasi
+        function updateThemeIcons(isDark) {
+            const sunIcons = document.querySelectorAll('[id^="sun-icon"]');
+            const moonIcons = document.querySelectorAll('[id^="moon-icon"]');
+
+            sunIcons.forEach(icon => icon.classList.toggle('hidden', isDark));
+            moonIcons.forEach(icon => icon.classList.toggle('hidden', !isDark));
+        }
+
+        // Saqlangan mavzu afzalligini tekshirish yoki yorug'lik rejimiga o'tish
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            htmlElement.classList.add('dark');
+            updateThemeIcons(true);
+        } else {
+            htmlElement.classList.remove('dark');
+            updateThemeIcons(false);
+        }
+
+        // Mavzu almashtirish tugmalari uchun hodisa tinglovchisi
+        document.querySelectorAll('[id^="theme-toggle"]').forEach(button => {
+            button.addEventListener('click', () => {
+                const isDark = htmlElement.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                updateThemeIcons(isDark);
+            });
+        });
+
+        // Musiqa boshqaruv logikasi
+        const backgroundMusic = document.getElementById('background-music');
+        const musicToggleDesktop = document.getElementById('music-toggle-desktop');
+        const musicToggleMobile = document.getElementById('music-toggle-mobile');
+        const musicIconDesktop = document.getElementById('music-icon-desktop');
+        const musicIconMobile = document.getElementById('music-icon-mobile');
+
+        // Musiqa holatini yangilash funksiyasi (ikonka o'zgarishi bilan)
+        function updateMusicIcon(isPlaying) {
+            if (isPlaying) {
+                musicIconDesktop.classList.remove('fa-volume-mute');
+                musicIconDesktop.classList.add('fa-music');
+                musicIconMobile.classList.remove('fa-volume-mute');
+                musicIconMobile.classList.add('fa-music');
+            } else {
+                musicIconDesktop.classList.remove('fa-music');
+                musicIconDesktop.classList.add('fa-volume-mute');
+                musicIconMobile.classList.remove('fa-music');
+                musicIconMobile.classList.add('fa-volume-mute');
+            }
+        }
+
+        // Musiqani ijro etish/to'xtatish funksiyasi
+        function toggleMusic() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                updateMusicIcon(true);
+            } else {
+                backgroundMusic.pause();
+                updateMusicIcon(false);
+            }
+        }
+
+        // Tugmalarga hodisa tinglovchilarni qo'shish
+        if (musicToggleDesktop) {
+            musicToggleDesktop.addEventListener('click', toggleMusic);
+        }
+        if (musicToggleMobile) {
+            musicToggleMobile.addEventListener('click', toggleMusic);
+        }
+
+        // Sahifa yuklanganda musiqani avtomatik ijro etishga urinish va ikonkani yangilash
+        // Ba'zi brauzerlar foydalanuvchi o'zaro aloqasisiz avtomatik ijroni bloklashi mumkin.
+        window.addEventListener('load', () => {
+            backgroundMusic.volume = 0.5; // Ovoz balandligini sozlash
+            backgroundMusic.play().then(() => {
+                updateMusicIcon(true);
+            }).catch(error => {
+                console.log("Musiqa avtomatik ijro etilmadi:", error);
+                updateMusicIcon(false); // Agar avtomatik ijro bloklansa, ovozsiz ikonkani ko'rsatish
+            });
+        });
+
+
+        // Karusel logikasi
+        const carousels = {
+            'smm': { track: document.getElementById('smm-carousel-track'), index: 0 },
+            'mockup-print': { track: document.getElementById('mockup-print-carousel-track'), index: 0 },
+            'large-scale': { track: document.getElementById('large-scale-carousel-track'), index: 0 },
+            'logos': { track: document.getElementById('logos-carousel-track'), index: 0 }
+        };
+
+        function getItemsPerPage() {
+            if (window.innerWidth >= 1024) return 4; // lg
+            if (window.innerWidth >= 768) return 3;  // md
+            if (window.innerWidth >= 640) return 2;  // sm
+            return 1; // mobile
+        }
+
+        function moveCarousel(id, direction) {
+            const carousel = carousels[id];
+            const items = carousel.track.children.length;
+            const itemsPerPage = getItemsPerPage();
+            const maxIndex = Math.max(0, items - itemsPerPage); // maxIndex manfiy bo'lmasligini ta'minlash
+
+            carousel.index = carousel.index + direction;
+
+            // Chegaralar kesib o'tilsa, boshiga/oxiriga qaytish
+            if (carousel.index < 0) {
+                carousel.index = maxIndex;
+            } else if (carousel.index > maxIndex) {
+                carousel.index = 0;
+            }
+
+            const itemWidth = carousel.track.children[0].offsetWidth; // Elementning haqiqiy kengligini olish
+            carousel.track.style.transform = `translateX(-${carousel.index * itemWidth}px)`;
+        }
+
+        // Responsiv karusel uchun oyna o'lchamini o'zgartirishni boshqarish
+        window.addEventListener('resize', () => {
+            for (const id in carousels) {
+                const carousel = carousels[id];
+                const itemsPerPage = getItemsPerPage();
+                const items = carousel.track.children.length;
+                const maxIndex = Math.max(0, items - itemsPerPage);
+                // O'lcham o'zgartirilganda indeks yangi maxIndexdan oshib ketmasligini sozlash
+                if (carousel.index > maxIndex) {
+                    carousel.index = maxIndex;
+                }
+                const itemWidth = carousel.track.children[0].offsetWidth;
+                carousel.track.style.transform = `translateX(-${carousel.index * itemWidth}px)`;
+            }
+        });
+
+
+        // Sahifa navigatsiya logikasi
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active-page');
+            });
+            document.getElementById(pageId).classList.add('active-page');
+
+            // Agar portfoliodan boshqa sahifaga o'tilsa yoki asosiy portfolioga qaytilsa, logobook detal ko'rinishini yashirish
+            if (pageId !== 'portfolio') {
+                document.getElementById('logobook-detail-view').style.display = 'none';
+                document.getElementById('portfolio-main-view').style.display = 'block';
+            }
+        }
+
+        // Mobil menyu almashtirish logikasi
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+        });
+
+        mobileMenuCloseButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+        });
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+        }
+
+        // Navbar aylanish animatsiyasi
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('main-navbar');
+            if (window.scrollY > 50) { // Aylanish chegarasini kerakli darajada sozlash
+                navbar.classList.add('nav-scrolled');
+            } else {
+                navbar.classList.remove('nav-scrolled');
+            }
+        });
+
+
+        // Logobook ma'lumotlari (soxta ma'lumotlar)
+        const logobookData = {
+            'logo1': {
+                title: 'Kompaniya A Logotipi',
+                description: 'Bu logotip kompaniya A ning dinamik va innovatsion ruhini aks ettiradi. Asosiy elementlar kompaniyaning o\'sishini va kelajakka intilishini ifodalaydi.',
+                colors: '#FF5733 (Qizil-to\'q sariq), #FFFFFF (Oq)',
+                fonts: 'Montserrat Bold, Open Sans Regular',
+                usage: [
+                    'https://placehold.co/600x400/FF5733/FFFFFF?text=Logo+on+Mug',
+                    'https://placehold.co/600x400/33FF57/FFFFFF?text=Logo+on+T-shirt',
+                    'https://placehold.co/600x400/5733FF/FFFFFF?text=Logo+on+Website'
+                ],
+                fullImages: [
+                    'https://placehold.co/400x400/FF5733/FFFFFF?text=Logo+1+Full',
+                    'https://placehold.co/400x400/333333/FFFFFF?text=Logo+1+BW'
+                ]
+            },
+            'logo2': {
+                title: 'Startup B Logotipi',
+                description: 'Startup B uchun yaratilgan bu logotip soddalik va zamonaviylikni o\'zida mujassam etgan. Minimalistik yondashuv kompaniyaning aniq maqsadlarini aks ettiradi.',
+                colors: '#33FF57 (Yashil), #000000 (Qora)',
+                fonts: 'Roboto Medium',
+                usage: [
+                    'https://placehold.co/600x400/33FF57/FFFFFF?text=Logo+on+App',
+                    'https://placehold.co/600x400/FF33A1/FFFFFF?text=Logo+on+Card',
+                    'https://placehold.co/600x400/33A1FF/FFFFFF?text=Logo+on+Sign'
+                ],
+                fullImages: [
+                    'https://placehold.co/400x400/33FF57/FFFFFF?text=Logo+2+Full',
+                    'https://placehold.co/400x400/CCCCCC/000000?text=Logo+2+Negative'
+                ]
+            },
+            'logo3': {
+                title: 'Kafe C Logotipi',
+                description: 'Kafe C logotipi issiqlik va qulaylikni yetkazish uchun mo\'ljallangan. Yumshoq shakllar va tabiiy ranglar mehmondo\'st muhitni yaratadi.',
+                colors: '#5733FF (Binafsha), #F0F0F0 (Och kulrang)',
+                fonts: 'Pacifico, Lato Light',
+                usage: [
+                    'https://placehold.co/600x400/5733FF/FFFFFF?text=Logo+on+Cup',
+                    'https://placehold.co/600x400/FF5733/FFFFFF?text=Logo+on+Menu',
+                    'https://placehold.co/600x400/33FF57/FFFFFF?text=Logo+on+Napkin'
+                ],
+                fullImages: [
+                    'https://placehold.co/400x400/5733FF/FFFFFF?text=Logo+3+Full',
+                    'https://placehold.co/400x400/FFFFFF/5733FF?text=Logo+3+Inverse'
+                ]
+            },
+            'logo4': {
+                title: 'Moda brendi D Logotipi',
+                description: 'Moda brendi D uchun yaratilgan bu logotip nafislik va zamonaviylikni aks ettiradi. Toza chiziqlar va minimalist dizayn brendning yuqori sifatini ta\'kidlaydi.',
+                colors: '#FF33A1 (Pushti), #000000 (Qora)',
+                fonts: 'Playfair Display, Raleway',
+                usage: [
+                    'https://placehold.co/600x400/FF33A1/FFFFFF?text=Logo+on+Bag',
+                    'https://placehold.co/600x400/5733FF/FFFFFF?text=Logo+on+Label',
+                    'https://placehold.co/600x400/33FF57/FFFFFF?text=Logo+on+Website'
+                ],
+                fullImages: [
+                    'https://placehold.co/400x400/FF33A1/FFFFFF?text=Logo+4+Full',
+                    'https://placehold.co/400x400/333333/FF33A1?text=Logo+4+Dark'
+                ]
+            },
+            'logo5': {
+                title: 'Texnologiya E Logotipi',
+                description: 'Texnologiya kompaniyasi E logotipi innovatsiya va kelajakni ifodalaydi. Geometrik shakllar va yorqin ranglar kompaniyaning ilg\'or yondashuvini ko\'rsatadi.',
+                colors: '#33A1FF (Moviy), #FFFFFF (Oq)',
+                fonts: 'Orbitron, Lato',
+                usage: [
+                    'https://placehold.co/600x400/33A1FF/FFFFFF?text=Logo+on+Device',
+                    'https://placehold.co/600x400/FF5733/FFFFFF?text=Logo+on+Presentation',
+                    'https://placehold.co/600x400/5733FF/FFFFFF?text=Logo+on+Software'
+                ],
+                fullImages: [
+                    'https://placehold.co/400x400/33A1FF/FFFFFF?text=Logo+5+Full',
+                    'https://placehold.co/400x400/000000/33A1FF?text=Logo+5+Inverse'
+                ]
+            }
+        };
+
+        function showLogobook(logoId) {
+            const data = logobookData[logoId];
+            if (!data) {
+                console.error('Logotip ma\'lumotlari topilmadi:', logoId);
+                return;
+            }
+
+            document.getElementById('portfolio-main-view').style.display = 'none';
+            const logobookDetailView = document.getElementById('logobook-detail-view');
+            logobookDetailView.style.display = 'block';
+
+            document.getElementById('logobook-title').innerText = data.title;
+            const logobookContent = document.getElementById('logobook-content');
+            logobookContent.innerHTML = ''; // Oldingi kontentni tozalash
+
+            // To'liq rasmlar
+            const fullImagesHtml = `
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">To'liq Rasmlar</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        ${data.fullImages.map(imgSrc => `<img src="${imgSrc}" alt="${data.title} to'liq rasm" class="logobook-image">`).join('')}
+                    </div>
+                </div>
+            `;
+            logobookContent.innerHTML += fullImagesHtml;
+
+            // Tavsif
+            const descriptionHtml = `
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Logotip Haqida Ma'lumot</h3>
+                    <p class="text-gray-700 leading-relaxed mb-3">${data.description}</p>
+                    <p class="text-gray-700 mb-1"><strong>Ranglar:</strong> ${data.colors}</p>
+                    <p class="text-gray-700 mb-1"><strong>Shriftlar:</strong> ${data.fonts}</p>
+                </div>
+            `;
+            logobookContent.innerHTML += descriptionHtml;
+
+            // Qo'llanilish holatlari (Mockuplar)
+            const usageHtml = `
+                <div class="lg:col-span-2">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Qo'llanilish Holatlari (Mockuplar)</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${data.usage.map(imgSrc => `<img src="${imgSrc}" alt="${data.title} qo'llanilish mockapi" class="logobook-image">`).join('')}
+                    </div>
+                </div>
+            `;
+            logobookContent.innerHTML += usageHtml;
+        }
+
+        function hideLogobook() {
+            document.getElementById('logobook-detail-view').style.display = 'none';
+            document.getElementById('portfolio-main-view').style.display = 'block';
+        }
+
+        // Sahifa dastlab yuklanganda: bosh sahifani faol qilish
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('home');
+        });
+
+        // Xabar qutisini ko'rsatish funksiyasi
+        function showMessageBox(message) {
+            const messageBox = document.getElementById('message-box');
+            const messageBoxText = document.getElementById('message-box-text');
+            messageBoxText.innerText = message;
+            messageBox.style.display = 'block';
+            messageBox.style.animation = 'fadeIn 0.3s ease-out';
+        }
+
+        // Xabar qutisini yashirish funksiyasi
+        function hideMessageBox() {
+            const messageBox = document.getElementById('message-box');
+            messageBox.style.animation = 'fadeOut 0.3s ease-in';
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 300); // Animatsiya tugagandan so'ng yashirish
+        }
+
+        // Email yuborish funksiyasi
+        async function sendEmail(event) {
+            event.preventDefault(); // Shaklning standart yuborilishini oldini olish
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            // Ma'lumotlarni serverga yuborish uchun ob'ekt yaratish
+            const formData = {
+                name: name,
+                email: email,
+                message: message
+            };
+
+            try {
+                // DIQQAT: Bu yerda endi sizning backend serveringizning URL'ini ko'rsatishingiz kerak.
+                // Agar serveringiz localhost:3000 da ishlayotgan bo'lsa:
+                const response = await fetch('http://localhost:3000/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    showMessageBox("Xabaringiz muvaffaqiyatli yuborildi!");
+                    document.getElementById('contact-form').reset(); // Shaklni tozalash
+                } else {
+                    const errorData = await response.json(); // Serverdan kelgan xato xabarini o'qish
+                    // Serverdan kelgan aniq xato xabarini ko'rsatish
+                    showMessageBox(`Xabar yuborishda xato yuz berdi: ${errorData.message || 'Noma\'lum xato'}`);
+                    console.error('Server xatosi:', response.status, response.statusText, errorData);
+                }
+            } catch (error) {
+                // Tarmoq xatosi yoki backend mavjud bo'lmasa
+                showMessageBox("Tarmoq xatosi. Iltimos, serveringiz ishlayotganligiga ishonch hosil qiling.");
+                console.error('Xabar yuborishda xato:', error);
+            }
+        }
+    </script>
+</body>
+</html>
