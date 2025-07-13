@@ -1,7 +1,7 @@
 {
-  "name": "email-sender-backend",
+  "name": "email-server",
   "version": "1.0.0",
-  "description": "Veb-saytdan elektron pochta yuborish uchun Node.js backend serveri.",
+  "description": "A simple Node.js server for sending emails.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -10,15 +10,13 @@
   "keywords": [
     "email",
     "nodemailer",
-    "nodejs",
+    "node.js",
     "express"
   ],
-  "author": "Sizning Ismingiz",
+  "author": "Your Name",
   "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "nodemailer": "^6.9.13"
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.8"
   }
 }
